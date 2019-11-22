@@ -1,0 +1,48 @@
+# install docker-compose
+  211  apt-get update
+  212  apt-get install docker-compose
+  213  vi docker-compose.yml
+  214  docker-compose up -d
+  217  docker-compose down
+# initialise docker swarm
+       docker swarm init --advertise-addr <Ip address>
+       docker swarm join
+# create a service on the swarm cluster
+  259  docker node ls # in the manager node
+  262  docker service create --name apache2 --mode global -d -p 8003:80 httpd
+  263  docker service ls # view the apache server in http://jenkinsmaster:8003
+# Deploy multi-tier application on the swarm cluster using overlay networks
+  272  docker service create --name webapp -d --network myoverlay -p 8001:80 hshar/webapp
+  273  docker service create --name mysql -d --network myoverlay -p 3306:3306 hshar/mysql:5.5
+  274  docker service ls
+  275  docker ps
+  276  docker exec -it 06646e6bc44c bash # in the node where webapp is running 
+	nano var/www/html/index.php # change password to edureka and server name to mysql
+  6  docker ps
+  7  docker exec -it c8857f9859da bash # where mysql is running
+	mysql -u root -pedureka
+        CREATE DATABASE docker;
+        USE docker;
+        CREATE TABLE emp (name VARCHAR(10), phone VARCHAR(11));
+# login to http://jenkinsmaster:8001 and enter the details
+# goto mysql and execute below steps
+  4  docker exec -it c8857f9859da bash
+  mysql -u root -pedureka
+  use docker;
+  show tables;
+  select * from emp;
+# scale the service
+  259  docker service ls
+  260  docker service scale mysql=5
+  261  docker service ps mysql 
+#If askpass error is coming in Jenkins while using sudo add jenkins to visudo file as follows
+jenkins ALL=(ALL) NOPASSWD: ALL
+# Create a job QADeploy
+#  execute shell commands below 
+# Remove node from the swarm
+  315  docker swarm leave
+  316  docker swarm leave --force
+  317  docker node ls
+ 
+# https://jenkins.io/doc/book/pipeline/docker/ => for docker jenkins integration
+
