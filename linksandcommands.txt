@@ -39,6 +39,8 @@
 jenkins ALL=(ALL) NOPASSWD: ALL
 # Create a job QADeploy
 #  execute shell commands below 
+sudo docker build -t anjurose/addressbook:image$BUILD_NUMBER /var/lib/jenkins/workspace/QAPackage/
+sudo docker run -d -p 9090:8080 anjurose/addressbook:image$BUILD_NUMBER
 # Remove node from the swarm
   315  docker swarm leave
   316  docker swarm leave --force
